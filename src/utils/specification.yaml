@@ -1,0 +1,395 @@
+openapi: 3.1.0
+info:
+  title: TP final backend
+  description: Esta API se encarga de manejar información de películas.
+  version: 1.0.0
+servers:
+  - url: http://localhost:8080/
+tags:
+  - name: user
+    description: Endpoints relacionados con usuarios
+  - name: movies
+    description: Endpoints relacionados con películas
+
+ 
+
+paths: 
+  /user/register:
+    post:
+      tags:
+        - user
+      description: Registro de usuario
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/userRegisterRequest"
+      responses:
+        200:
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/userRegisterResponse"
+          headers:
+            auth-token:
+              $ref: "#/components/headers/AuthTokenHeader"
+        401:
+          $ref: '#/components/responses/Unauthorized' 
+        404:
+          $ref: '#/components/responses/NotFound'
+        500:
+          $ref: '#/components/responses/ServerError'
+
+  /user/login:
+    post:
+      tags:
+        - user
+      description: Inicio de sesión de usuario
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/userLoginRequest"
+      responses:
+        200:
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/userLoginResponse"
+          headers:
+            auth-token:
+              $ref: "#/components/headers/AuthTokenHeader"
+        401:
+          $ref: '#/components/responses/Unauthorized' 
+        404:
+          $ref: '#/components/responses/NotFound'
+        500:
+          $ref: '#/components/responses/ServerError'
+
+  /movies/listado :
+    get:
+      tags:
+        - movies
+      description: Listado de películas
+      responses:
+       200:
+        description: OK
+        content: 
+          application/json:
+           schema:
+            $ref: '#/components/schemas/responseListMovie'
+        401:
+          $ref: '#/components/responses/Unauthorized' 
+        404:
+          $ref: '#/components/responses/NotFound'
+        500:
+          $ref: '#/components/responses/ServerError'
+
+
+
+  /movies/buscar/{genero}:
+    get:
+      tags:
+        - movies
+      description: Esta ruta trae la película buscada por gènero
+      parameters:
+        - $ref: '#/components/parameters/genero'
+      responses:
+        200:
+          description: OK
+          content:
+            application/json:
+              schema:
+                   $ref: '#/components/schemas/responseListMovie'
+
+        400:
+         description: bad request
+         content:
+           application/json:
+              schema:
+                  $ref: '#/components/responses/BadRequest'    
+        401:
+          $ref: '#/components/responses/Unauthorized' 
+        404:
+          $ref: '#/components/responses/NotFound'
+        500:
+          $ref: '#/components/responses/ServerError'
+          
+  /movies/crear:
+     post: 
+      tags:
+        - movies
+      description:  Esta ruta crea un item de película en la base de datos. Realiza traducciones del título y la sinopsis utilizando una API externa de traducción.
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/postMovie"
+      responses:
+        201:
+          description: OK
+          content:
+            application/json:
+              schema:
+                  $ref: '#/components/schemas/responseMovie'
+        400:
+         description: bad request
+         content:
+           application/json:
+              schema:
+                  $ref: '#/components/responses/BadRequest'    
+        401:
+          $ref: '#/components/responses/Unauthorized' 
+        404:
+          $ref: '#/components/responses/NotFound'
+        500:
+          $ref: '#/components/responses/ServerError'
+
+  /movies/editar/{id}:
+     put: 
+      tags:
+        - movies
+      description: Operacion disponible para usuarios que hayan iniciado sesion. 
+       Esta ruta permite editar una película por medio del id.
+      security:
+        - bearerAuth: []
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/postMovie"
+      parameters:
+        - $ref: '#/components/parameters/id'
+        # - name: id
+        #   in: path
+        #   description: Id de la pelicula
+        #   required: true
+          # schema:
+          #  type: string
+      responses:
+        200:
+          description: OK
+          content:
+            application/json:
+              schema:
+                  $ref: '#/components/schemas/responseMovie'
+        400:
+         description: bad request
+         content:
+           application/json:
+              schema:
+                $ref: '#/components/responses/badRequestInvalidId'
+        401:
+          $ref: '#/components/responses/Unauthorized' 
+        404:
+          $ref: '#/components/responses/NotFound'
+        500:
+          $ref: '#/components/responses/ServerError'
+
+  /movies/eliminar/{id}:
+     delete: 
+       security:
+        - bearerAuth: []
+       tags:
+        - movies
+       description: Operacion disponible solo para usuarios logueados.
+        Esta ruta elimina una pelicula por ID de  la base de datos.
+       parameters:
+        - $ref: '#/components/parameters/id'
+        # - name: id
+        #   in: path
+        #   description: Id de la pelicula
+        #   required: true
+        #   schema:
+        #    type: string
+       responses:
+        200:
+          description: OK
+          content:
+            application/json:
+              schema:
+                  $ref: '#/components/schemas/deleteMovieResponse'
+        400:
+         description: bad request
+         content:
+           application/json:
+              schema:
+                  $ref: '#/components/responses/badRequestInvalidId'
+        401:
+          $ref: '#/components/responses/Unauthorized' 
+        404:
+          $ref: '#/components/responses/NotFound'
+        500:
+          $ref: '#/components/responses/ServerError'
+
+
+components:
+  headers:
+    AuthTokenHeader:
+      description: Token de autenticación
+      schema:
+        type: string
+      example: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9..."      
+  
+  securitySchemes:
+    bearerAuth: 
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+
+  schemas:
+   
+    postMovie:
+      properties:
+        titulo: 
+          type: string
+          description: Titulo de la pelicula.
+        director: 
+         type: string
+         description: Nombre del director.
+        duracion: 
+          type: number
+          description: Duracion de la pelicula en minutos.
+        añoEstreno: 
+           type: number
+           description: Año del estreno.
+        actores: 
+           type: array
+           description: Array con los actores principales.
+           items:
+            type: string
+        sinopsis: 
+           type: string
+           description: Resumen de la trama de la pelicula.
+        genero: 
+           type: string  
+           description: Genero al cual pertenece.
+    responseMovie:
+      properties:
+        _id: 
+          type : string
+          description: ID con el cual esta guardada la pelicula
+        titulo: 
+          type: string
+          description: Titulo de la pelicula.
+        director: 
+         type: string
+         description: Nombre del director.
+        duracion: 
+          type: number
+          description: Duracion de la pelicula en minutos.
+        añoEstreno: 
+           type: number
+           description: Año del estreno.
+        actores: 
+           type: array
+           description: Array con los actores principales.
+           items:
+            type: string
+        sinopsis: 
+           type: string
+           description: Resumen de la trama de la pelicula.
+        genero: 
+           type: string
+           description: Genero al cual pertenece.
+        __v:
+          type: number
+
+    deleteMovieResponse: 
+      properties:
+        msg:
+          type: string
+          example: "Pelicula borrado ejemplo"
+        movie:
+          $ref: '#/components/schemas/responseMovie' 
+    responseListMovie:
+      type: object
+      properties:
+        movies: 
+          items:
+            $ref: '#/components/schemas/responseMovie'
+
+    userRegisterResponse:
+      properties:      
+       _id: 
+          type : string
+          description: ID con el cual se registro el usuario.
+       username: 
+          type: string
+          description: Nombre de usuario.
+       email: 
+          type: string
+          description: Email con el cual se registro el usuario.
+       password: 
+           type: string
+           description: Contraseña encriptada.
+       createdAt: 
+           type: string
+           description: Fecha de creacion del usuario.
+    userRegisterRequest:
+      properties:      
+       username: 
+          type: string
+          description: Nombre de usuario.
+       email: 
+          type: string
+          description: Email con el cual se registro el usuario.
+       password: 
+           type: string
+           description: Crear contraseña.
+    userLoginResponse:
+      properties:
+        msg:
+          type: string
+          example: "Login successful"
+    userLoginRequest:
+      properties:      
+       username: 
+          type: string
+          description: Nombre de usuario.
+       password: 
+           type: string
+           description: Crear contraseña.
+
+  responses:
+    badRequestInvalidId: 
+      properties:
+        msg:
+          type: string
+          example: "El id es invalido"
+
+    Unauthorized:
+      description: (Unauthorized) No hay autorizacion.
+    NotFound:
+      description: (NotFound) No se encontró información 
+    ServerError:
+      description: Error en servidor
+    BadRequest:
+      description: (Bad Request) Los datos enviados son incorrectos o hay datos obligatorios no enviados
+    
+  parameters:
+    id:
+      name: id
+      in: path
+      description: Id de la pelicula
+      required: true
+      schema:
+        type: string
+    genero:
+      name: genero
+      in: path
+      description: Genero de la pelicula
+      required: true
+      schema:
+        type: string
+
+
+    # token:
+    #   in: header
+    #   name: token
+    #   description: Token de autenticación en API.
+    #   required: true
+    #   schema:
+    #     type: string
