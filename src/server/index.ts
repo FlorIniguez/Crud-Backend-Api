@@ -1,14 +1,16 @@
 import express, { Response,Request } from 'express';
 import { routeError } from '../utils/middlewares/routeError';
 const userRoutes = require('../routes/users/userRoutes')
-const moviesRoutes = require('../routes/movies/moviesRouter')
+const moviesRoutes = require('../routes/movies/moviesRoutes')
 import swagger from '../utils/swagger';
+import handleJSONErrorMiddleware from '../utils/middlewares/validateJsonMiddleware';
 
 
 const server = express();
+
 swagger('/swagger',server)
 server.use(express.json());
-
+server.use(handleJSONErrorMiddleware);
 server.get('/', (req: Request,res:Response)=> {
     res.send('Welcome to my first backend project!');
    })

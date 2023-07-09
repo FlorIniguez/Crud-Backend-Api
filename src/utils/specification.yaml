@@ -1,15 +1,16 @@
-openapi: 3.1.0
+openapi: 3.0.1
 info:
   title: TP final backend
   description: Esta API se encarga de manejar información de películas.
+   Para poder  modificar/actualizar o eliminar una pelicula de la basw de datos es requisito estar loguearse o registarse.
   version: 1.0.0
 servers:
   - url: http://localhost:8080/
 tags:
   - name: user
-    description: Endpoints relacionados con usuarios
+    description: Rutas relacionadas con usuarios
   - name: movies
-    description: Endpoints relacionados con películas
+    description: Rutas relacionadas con películas
 
  
 
@@ -18,7 +19,7 @@ paths:
     post:
       tags:
         - user
-      description: Registro de usuario
+      description: Registro de usuario. Devuelve token por header para las rutas protegidas.
       requestBody:
         content:
           application/json:
@@ -32,8 +33,11 @@ paths:
               schema:
                 $ref: "#/components/schemas/userRegisterResponse"
           headers:
-            auth-token:
-              $ref: "#/components/headers/AuthTokenHeader"
+           auth-token:
+            description: Token de autenticación
+            schema:
+              type: string
+            example: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9..."
         401:
           $ref: '#/components/responses/Unauthorized' 
         404:
@@ -45,7 +49,7 @@ paths:
     post:
       tags:
         - user
-      description: Inicio de sesión de usuario
+      description: Inicio de sesión de usuario. Devuelve token por header para las rutas protegidas.
       requestBody:
         content:
           application/json:
@@ -59,8 +63,11 @@ paths:
               schema:
                 $ref: "#/components/schemas/userLoginResponse"
           headers:
-            auth-token:
-              $ref: "#/components/headers/AuthTokenHeader"
+           auth-token:
+            description: Token de autenticación
+            schema:
+              type: string
+            example: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9..."
         401:
           $ref: '#/components/responses/Unauthorized' 
         404:
@@ -72,14 +79,14 @@ paths:
     get:
       tags:
         - movies
-      description: Listado de películas
+      description: Esta ruta devuelve el listado total de películas de la base de datos.
       responses:
-       200:
-        description: OK
-        content: 
-          application/json:
-           schema:
-            $ref: '#/components/schemas/responseListMovie'
+        200:
+         description: OK
+         content: 
+           application/json:
+            schema:
+             $ref: '#/components/schemas/responseListMovie'
         401:
           $ref: '#/components/responses/Unauthorized' 
         404:
@@ -93,7 +100,7 @@ paths:
     get:
       tags:
         - movies
-      description: Esta ruta trae la película buscada por gènero
+      description: Lista o pelicula por genero. (generos:comedia, romantica, accion, terror, drama, infantil, otro)
       parameters:
         - $ref: '#/components/parameters/genero'
       responses:
@@ -121,7 +128,8 @@ paths:
      post: 
       tags:
         - movies
-      description:  Esta ruta crea un item de película en la base de datos. Realiza traducciones del título y la sinopsis utilizando una API externa de traducción.
+      description: Esta ruta crea un item de película en la base de datos. Realiza traducciones del título y la sinopsis utilizando una API externa de traducción.
+       Campos obligatorios:titulo, genero (comedia, romantica, accion, terror, drama, infantil, otro) y sinopsis.
       requestBody:
         content:
           application/json:
@@ -151,8 +159,9 @@ paths:
      put: 
       tags:
         - movies
-      description: Operacion disponible para usuarios que hayan iniciado sesion. 
-       Esta ruta permite editar una película por medio del id.
+   
+      description: Operacion disponible para usuarios regitrados o que hayan iniciado sesión, requiere token. 
+       Esta ruta permite editar uno o varios datos de una película por medio de su id.
       security:
         - bearerAuth: []
       requestBody:
@@ -162,12 +171,6 @@ paths:
               $ref: "#/components/schemas/postMovie"
       parameters:
         - $ref: '#/components/parameters/id'
-        # - name: id
-        #   in: path
-        #   description: Id de la pelicula
-        #   required: true
-          # schema:
-          #  type: string
       responses:
         200:
           description: OK
@@ -192,18 +195,13 @@ paths:
      delete: 
        security:
         - bearerAuth: []
+     
        tags:
         - movies
-       description: Operacion disponible solo para usuarios logueados.
-        Esta ruta elimina una pelicula por ID de  la base de datos.
+       description: Operacion disponible para usuarios regitrados o que hayan iniciado sesion, requiere token.
+        Esta ruta permite eliminar una pelicula por su id.
        parameters:
         - $ref: '#/components/parameters/id'
-        # - name: id
-        #   in: path
-        #   description: Id de la pelicula
-        #   required: true
-        #   schema:
-        #    type: string
        responses:
         200:
           description: OK
@@ -212,11 +210,8 @@ paths:
               schema:
                   $ref: '#/components/schemas/deleteMovieResponse'
         400:
-         description: bad request
-         content:
-           application/json:
-              schema:
-                  $ref: '#/components/responses/badRequestInvalidId'
+          
+                   $ref: '#/components/responses/badRequestInvalidId'
         401:
           $ref: '#/components/responses/Unauthorized' 
         404:
@@ -226,18 +221,19 @@ paths:
 
 
 components:
-  headers:
-    AuthTokenHeader:
-      description: Token de autenticación
-      schema:
-        type: string
-      example: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9..."      
-  
+ 
   securitySchemes:
-    bearerAuth: 
-      type: http
-      scheme: bearer
-      bearerFormat: JWT
+    bearerAuth:
+      type: apiKey
+      name: Authorization
+      in: header
+      description: Token de autenticación (sin prefijo Bearer)
+    # bearerAuth:
+    #   type: http
+    #   scheme: bearer
+    #   bearerFormat: JWT
+    #   description: Token de autenticación (sin prefijo Bearer)
+
 
   schemas:
    
@@ -303,7 +299,8 @@ components:
           type: string
           example: "Pelicula borrado ejemplo"
         movie:
-          $ref: '#/components/schemas/responseMovie' 
+          $ref: '#/components/schemas/responseMovie'
+           
     responseListMovie:
       type: object
       properties:
@@ -355,11 +352,7 @@ components:
 
   responses:
     badRequestInvalidId: 
-      properties:
-        msg:
-          type: string
-          example: "El id es invalido"
-
+       description: El id es invaldio
     Unauthorized:
       description: (Unauthorized) No hay autorizacion.
     NotFound:
@@ -384,12 +377,3 @@ components:
       required: true
       schema:
         type: string
-
-
-    # token:
-    #   in: header
-    #   name: token
-    #   description: Token de autenticación en API.
-    #   required: true
-    #   schema:
-    #     type: string
