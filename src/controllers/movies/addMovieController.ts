@@ -25,9 +25,8 @@ export const addMovieController = async (req: Request, res: Response) => {
         q: [newMovie.titulo],
       },
     });
-    //Cuando hacemos una solicitud a la API de traducción, obtenemos una respuesta que contiene datos. En este caso,
-    //los datos están en formato de array, donde cada elemento de la matriz corresponde a una traducción de texto.
-    //con 0 accedo al primer paramatro de la matriz
+    //solicitud a la API de traducción,  respuesta contiene datos. 
+    //los datos están en formato de array, con 0 accedo al primer paramatro de la matriz
     const translatedTitle = titleTranslationResponse.data[0];
 
     // Traducción de la sinopsis
@@ -49,7 +48,7 @@ export const addMovieController = async (req: Request, res: Response) => {
 
     const translatedSinopsis = sinopsisTranslationResponse.data[0];
 
-    // Crear una nueva instancia de la película con los datos traducidos
+    //nueva instancia de la película con los datos traducidos
     const movie: IMovie = new Movie({
       ...newMovie,
       titulo: translatedTitle,

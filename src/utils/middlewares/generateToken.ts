@@ -2,7 +2,7 @@ import jwt from 'jsonwebtoken';
 import dotenv from 'dotenv';
 dotenv.config();
 
-const generateJWT = (id: string): string => {
+export const generateJWT = (id: string): string => {
   const payload = { id };
   try {
     const token: string = jwt.sign(payload, process.env.TOKEN_SECRET || '', { expiresIn: '2h' });
@@ -12,4 +12,4 @@ const generateJWT = (id: string): string => {
   }
 };
 
-export { generateJWT };
+

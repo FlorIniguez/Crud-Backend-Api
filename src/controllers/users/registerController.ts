@@ -9,7 +9,7 @@ dotenv.config();
 export const registerController = async (req: Request, res: Response) => {
   try {
     const newUser: AddUserDTO = req.body;
-    // Hashear la contraseña
+    
     const hashedPassword = await bcrypt.hash(newUser.password, 10);
     const user: IUser = new User({
       ...newUser,
@@ -18,7 +18,7 @@ export const registerController = async (req: Request, res: Response) => {
     const savedUser = await user.save();
     //token
     const token: string = generateJWT(savedUser._id);
-    //envio por cabecera el token y en repuesta json datos del usuario
+   
     res.header("auth-token", token).json(savedUser);
   } catch (error) {
     res

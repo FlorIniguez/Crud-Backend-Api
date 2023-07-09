@@ -4,10 +4,10 @@ import dotenv from 'dotenv';
 import { IUser } from '../../models/User';
 dotenv.config();
 
-// extender una interfaz existente para agregarle propiedades adicionales o modificar su comportamiento. En este caso, 
-// queremos extender la interfaz Request de Express para agregar la propiedad user con el tipo IUser.
+// extender una interfaz existente para agregarle propiedades adicionales o modificar su comportamiento.  
+// extender la interfaz Request de Express para agregar la propiedad user con el tipo IUser.
 interface Request extends ExpressRequest {
-  user?: IUser; // Agregar la propiedad user con el tipo IUser
+  user?: IUser; 
 }
 
 export const authMiddleware = (req: Request, res: Response, next: NextFunction) => {
