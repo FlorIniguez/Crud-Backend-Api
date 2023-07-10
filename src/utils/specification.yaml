@@ -38,6 +38,8 @@ paths:
             schema:
               type: string
             example: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9..."
+        400:
+          $ref: '#/components/responses/BadRequest'          
         401:
           $ref: '#/components/responses/Unauthorized' 
         404:
@@ -68,6 +70,8 @@ paths:
             schema:
               type: string
             example: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9..."
+        400:
+          $ref: '#/components/responses/BadRequest'          
         401:
           $ref: '#/components/responses/Unauthorized' 
         404:
@@ -87,12 +91,15 @@ paths:
            application/json:
             schema:
              $ref: '#/components/schemas/responseListMovie'
+        400:
+          $ref: '#/components/responses/BadRequest'          
         401:
           $ref: '#/components/responses/Unauthorized' 
         404:
           $ref: '#/components/responses/NotFound'
         500:
           $ref: '#/components/responses/ServerError'
+
 
 
 
@@ -112,17 +119,14 @@ paths:
                    $ref: '#/components/schemas/responseListMovie'
 
         400:
-         description: bad request
-         content:
-           application/json:
-              schema:
-                  $ref: '#/components/responses/BadRequest'    
+          $ref: '#/components/responses/BadRequest'          
         401:
           $ref: '#/components/responses/Unauthorized' 
         404:
           $ref: '#/components/responses/NotFound'
         500:
           $ref: '#/components/responses/ServerError'
+
           
   /movies/crear:
      post: 
@@ -136,24 +140,21 @@ paths:
             schema:
               $ref: "#/components/schemas/postMovie"
       responses:
-        201:
+        200:
           description: OK
           content:
             application/json:
               schema:
                   $ref: '#/components/schemas/responseMovie'
         400:
-         description: bad request
-         content:
-           application/json:
-              schema:
-                  $ref: '#/components/responses/BadRequest'    
+          $ref: '#/components/responses/BadRequest'          
         401:
           $ref: '#/components/responses/Unauthorized' 
         404:
           $ref: '#/components/responses/NotFound'
         500:
           $ref: '#/components/responses/ServerError'
+
 
   /movies/editar/{id}:
      put: 
@@ -179,17 +180,14 @@ paths:
               schema:
                   $ref: '#/components/schemas/responseMovie'
         400:
-         description: bad request
-         content:
-           application/json:
-              schema:
-                $ref: '#/components/responses/badRequestInvalidId'
+          $ref: '#/components/responses/badRequestInvalidId'          
         401:
           $ref: '#/components/responses/Unauthorized' 
         404:
           $ref: '#/components/responses/NotFound'
         500:
           $ref: '#/components/responses/ServerError'
+
 
   /movies/eliminar/{id}:
      delete: 
@@ -210,8 +208,7 @@ paths:
               schema:
                   $ref: '#/components/schemas/deleteMovieResponse'
         400:
-          
-                   $ref: '#/components/responses/badRequestInvalidId'
+          $ref: '#/components/responses/badRequestInvalidId'          
         401:
           $ref: '#/components/responses/Unauthorized' 
         404:
