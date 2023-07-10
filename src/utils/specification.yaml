@@ -4,8 +4,14 @@ info:
   description: Esta API se encarga de manejar información de películas.
    Para poder  modificar/actualizar o eliminar una pelicula de la basw de datos es requisito estar loguearse o registarse.
   version: 1.0.0
+# servers:
+#   - url: http://localhost:8080/
 servers:
-  - url: http://localhost:8080/
+  - url: http://localhost:8080/movies
+    description: Rutas de pelìculas.
+  - url: http://localhost:8080/user
+    description: Rutas de usuarios.
+
 tags:
   - name: user
     description: Rutas relacionadas con usuarios
@@ -27,7 +33,7 @@ paths:
               $ref: "#/components/schemas/userRegisterRequest"
       responses:
         200:
-          description: OK
+          description: Registro de usuario exitoso.
           content:
             application/json:
               schema:
@@ -59,7 +65,7 @@ paths:
               $ref: "#/components/schemas/userLoginRequest"
       responses:
         200:
-          description: OK
+          description: Login de usuario exito.
           content:
             application/json:
               schema:
@@ -141,7 +147,7 @@ paths:
               $ref: "#/components/schemas/postMovie"
       responses:
         200:
-          description: OK
+          description: Película creada con èxito.
           content:
             application/json:
               schema:
@@ -158,13 +164,13 @@ paths:
 
   /movies/editar/{id}:
      put: 
+      security:
+      - bearerAuth: []
       tags:
         - movies
-   
       description: Operacion disponible para usuarios regitrados o que hayan iniciado sesión, requiere token. 
        Esta ruta permite editar uno o varios datos de una película por medio de su id.
-      security:
-        - bearerAuth: []
+      
       requestBody:
         content:
           application/json:
@@ -174,7 +180,7 @@ paths:
         - $ref: '#/components/parameters/id'
       responses:
         200:
-          description: OK
+          description: Película actualizada con èxito.
           content:
             application/json:
               schema:
@@ -192,7 +198,7 @@ paths:
   /movies/eliminar/{id}:
      delete: 
        security:
-        - bearerAuth: []
+       - bearerAuth: []
      
        tags:
         - movies
@@ -202,7 +208,7 @@ paths:
         - $ref: '#/components/parameters/id'
        responses:
         200:
-          description: OK
+          description: Pelicula eliminada con exito.
           content:
             application/json:
               schema:

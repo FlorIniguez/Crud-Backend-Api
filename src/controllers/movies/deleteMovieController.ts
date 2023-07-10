@@ -9,7 +9,7 @@ export const deleteMovieController =  async (req:Request,res: Response) => {
           return res.status(404).json({ message: "Película no encontrada" });
         }
     
-        res.json({ message: `La película '${deletedMovie.titulo}' fue eliminada con éxito` });
+        res.status(200).json({ message: `La película '${deletedMovie.titulo}' fue eliminada con éxito` });
       } catch (error) {
         console.error(error);
         res.status(500).json({ message: "Error al eliminar la película" });

@@ -10,7 +10,7 @@ export const getMovieGeneroController = async (req: Request, res: Response) => {
       });
     }
 
-    res.json(movies);
+    res.status(200).json(movies);
   } catch (error) {
     console.error(error);
     res.status(500).json(error);

@@ -8,7 +8,7 @@ export const updateMovieController = async (req: Request, res: Response) => {
         if (!movie) {
           return res.status(404).json({ message: "Pelicula no encontrada" });
         }
-        res.status(201).json(movie);
+        res.status(200).json(movie);
   } catch (error) {
     res.status(500).json(error);
   }

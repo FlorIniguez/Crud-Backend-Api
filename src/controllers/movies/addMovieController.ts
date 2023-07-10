@@ -56,7 +56,7 @@ export const addMovieController = async (req: Request, res: Response) => {
     });
 
     await movie.save();
-    res.status(201).json({ message: "Película creada con éxito", movie });
+    res.status(200).json({ message: "Película creada con éxito", movie });
   } catch (error) {
     console.error(error);
     res.status(500).json({ error: "Error al registrar la película" });
