@@ -10,7 +10,7 @@ const options = {
       version: '1.0.0',
     },
     servers: [
-      { url: 'http://localhost:8080/' },
+      { url: 'http://localhost:8080' },
     ],
   },
   apis: ['src/utils/specification.yaml',
