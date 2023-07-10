@@ -6,7 +6,7 @@ const options = {
     openapi: '3.0.1',
     info: {
       title: 'TP Backend',
-      description: 'Esta API se encarga de manejar información de películas.',
+      description: 'Esta API se encarga de manejar información de películas. Para poder  modificar/actualizar o eliminar una pelicula de la base de datos es requisito estar loguearse o registarse.',
       version: '1.0.0',
     },
     servers: [

@@ -1,23 +1,15 @@
-openapi: 3.0.1
-info:
-  title: TP final backend
-  description: Esta API se encarga de manejar información de películas.
-   Para poder  modificar/actualizar o eliminar una pelicula de la base de datos es requisito estar loguearse o registarse.
-  version: 1.0.0
-servers:
-  - url: http://localhost:8080
-
 tags:
-  - name: user
-    description: Rutas relacionadas con usuarios.
-  - name: movies
-    description: Rutas relacionadas con películas.
+  - name: User
+    description: Endpoints relacionados con usuarios.
+  - name: Movies
+    description: Endpoints relacionados con películas.
+  
 
 paths: 
   /user/register:
     post:
       tags:
-        - user
+        - User
       description: Registro de usuario. Devuelve token por header para las rutas protegidas.
       requestBody:
         content:
@@ -49,7 +41,7 @@ paths:
   /user/login:
     post:
       tags:
-        - user
+        - User
       description: Inicio de sesión de usuario. Devuelve token por header para las rutas protegidas.
       requestBody:
         content:
@@ -81,7 +73,7 @@ paths:
   /movies/listado :
     get:
       tags:
-        - movies
+        - Movies
       description: Esta ruta devuelve el listado total de películas de la base de datos.
       responses:
         200:
@@ -105,7 +97,7 @@ paths:
   /movies/buscar/{genero}:
     get:
       tags:
-        - movies
+        - Movies
       description: Lista o pelicula por genero. (generos:comedia, romantica, accion, terror, drama, infantil, otro)
       parameters:
         - $ref: '#/components/parameters/genero'
@@ -130,7 +122,7 @@ paths:
   /movies/crear:
      post: 
       tags:
-        - movies
+        - Movies
       description: Esta ruta crea un item de película en la base de datos. Realiza traducciones del título y la sinopsis utilizando una API externa de traducción.
        Campos obligatorios:titulo, genero (comedia, romantica, accion, terror, drama, infantil, otro) y sinopsis.
       requestBody:
@@ -160,7 +152,7 @@ paths:
       security:
       - bearerAuth: []
       tags:
-        - movies
+        - Movies
       description: Operacion disponible para usuarios regitrados o que hayan iniciado sesión, requiere token. 
        Esta ruta permite editar uno o varios datos de una película por medio de su id.
       
@@ -194,7 +186,7 @@ paths:
        - bearerAuth: []
      
        tags:
-        - movies
+        - Movies
        description: Operacion disponible para usuarios regitrados o que hayan iniciado sesion, requiere token.
         Esta ruta permite eliminar una pelicula por su id.
        parameters:
