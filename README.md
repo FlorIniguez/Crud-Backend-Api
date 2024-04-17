@@ -1,4 +1,4 @@
-## Consignas del proyecto integrador de Backend
+## Proyecto Backend
 
 1. Contar con una base de datos propia y cuenta en mongo compas.
 2. Desarrollar el proyecto con un servidor de Node.js que utilice rutas con sus respectivos métodos HTTP para la comunicación con la base de datos.
