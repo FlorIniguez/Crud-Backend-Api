@@ -1,6 +1,5 @@
 import server from './server'
-import dotenv  from "dotenv";
-dotenv.config()
+require ('dotenv').config();
 import './config'
 
 const PORT = 8080;

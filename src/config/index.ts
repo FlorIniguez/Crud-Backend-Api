@@ -1,4 +1,4 @@
-const mongoose = require('mongoose');
+import mongoose from 'mongoose';
 require('dotenv').config();
 
 const DATABASE_URL = process.env.DATABASE_URL || "";

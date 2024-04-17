@@ -2,7 +2,7 @@ import { Request, Response } from "express";
 import Movie, { IMovie } from "../../models/Movie";
 import { AddMovieDTO } from "./interfaces";
 import axios from "axios";
-require("dotenv").config();
+
 
 export const addMovieController = async (req: Request, res: Response) => {
   const contraseñaApi = process.env.API_KEY || "";
@@ -11,13 +11,13 @@ export const addMovieController = async (req: Request, res: Response) => {
 
     // Traducción del título
     const titleTranslationResponse = await axios.request({
-      method: "POST",
-      url: "https://rapid-translate-multi-traduction.p.rapidapi.com/t",
-      headers: {
-        "content-type": "application/json",
-        "X-RapidAPI-Key": contraseñaApi,
-        "X-RapidAPI-Host": "rapid-translate-multi-traduction.p.rapidapi.com",
-      },
+      method: 'POST',
+      url: 'https://rapid-translate-multi-traduction.p.rapidapi.com/t',
+  headers: {
+    'content-type': 'application/json',
+    'X-RapidAPI-Key': contraseñaApi,
+    'X-RapidAPI-Host': 'rapid-translate-multi-traduction.p.rapidapi.com'
+  },
       data: {
         from: "es",
         to: "en",
@@ -31,12 +31,12 @@ export const addMovieController = async (req: Request, res: Response) => {
 
     // Traducción de la sinopsis
     const sinopsisTranslationResponse = await axios.request({
-      method: "POST",
-      url: "https://rapid-translate-multi-traduction.p.rapidapi.com/t",
+      method: 'POST',
+      url: 'https://rapid-translate-multi-traduction.p.rapidapi.com/t',
       headers: {
-        "content-type": "application/json",
-        "X-RapidAPI-Key": contraseñaApi,
-        "X-RapidAPI-Host": "rapid-translate-multi-traduction.p.rapidapi.com",
+        'content-type': 'application/json',
+        'X-RapidAPI-Key': contraseñaApi,
+        'X-RapidAPI-Host': 'rapid-translate-multi-traduction.p.rapidapi.com'
       },
       data: {
         from: "es",
